@@ -1,5 +1,6 @@
 
 import os
+import datetime
 
 def mostrar_menu():
     #Muestra las opciones disponibles del programa.
@@ -41,6 +42,50 @@ def listar_contenido():
         print("El directorio actual no existe o no se puede acceder.")
     except OSError as error_del_sistema_operativo:
         print(f"Ocurrió un error al listar el contenido: {error_del_sistema_operativo}")
+
+def crear_directorio():
+    #Crea una nueva carpeta con el nombre indicado por el usuario.
+    nombre_directorio = input("Escribe el nombre del nuevo directorio: ").strip()
+    if not nombre_directorio:
+        print("El nombre no puede estar vacío.")
+        return
+    ruta_nueva = os.path.join(os.getcwd(), nombre_directorio)
+    if os.path.exists(ruta_nueva):
+        print("Ya existe un archivo o directorio con ese nombre.")
+        return
+    try:
+        os.mkdir(ruta_nueva)
+        print(f"Directorio creado: {ruta_nueva}")
+    except PermissionError:
+        print("No tienes permisos para crear el directorio en esta ubicación.")
+    except FileNotFoundError:
+        print("La ruta indicada no existe.")
+    except OSError as error_del_sistema_operativo:
+        print(f"No se pudo crear el directorio: {error_del_sistema_operativo}")
+
+def crear_archivo():
+    #Crea un archivo de texto y permite escribir contenido inicial.
+    nombre_archivo = input("Escribe el nombre del archivo (por ejemplo, notas.txt): ").strip()
+    if not nombre_archivo:
+        print("El nombre no puede estar vacío.")
+        return
+    ruta_archivo = os.path.join(os.getcwd(), nombre_archivo)
+    if os.path.exists(ruta_archivo):
+        print("Ya existe un archivo o directorio con ese nombre.")
+        return
+    try:
+        contenido_inicial = input("Escribe el contenido inicial (puede estar vacío): ")
+        with open(ruta_archivo, mode="w", encoding="utf-8") as archivo_de_texto:
+            archivo_de_texto.write(contenido_inicial)
+        print(f"Archivo creado: {ruta_archivo}")
+    except PermissionError:
+        print("No tienes permisos para crear o escribir en este archivo.")
+    except FileNotFoundError:
+        print("La ruta indicada no existe.")
+    except OSError as error_del_sistema_operativo:
+        print(f"No se pudo crear el archivo: {error_del_sistema_operativo}")
+
+
 
 
 def main():
