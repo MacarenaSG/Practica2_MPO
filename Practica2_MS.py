@@ -85,7 +85,117 @@ def crear_archivo():
     except OSError as error_del_sistema_operativo:
         print(f"No se pudo crear el archivo: {error_del_sistema_operativo}")
 
+def escribir_en_archivo():
+    #Abre un archivo existente y añade texto al final.
+    nombre_archivo = input("Escribe el nombre del archivo existente: ").strip()
+    if not nombre_archivo:
+        print("El nombre no puede estar vacío.")
+        return
+    ruta_archivo = os.path.join(os.getcwd(), nombre_archivo)
+    if not os.path.exists(ruta_archivo):
+        print("El archivo no existe.")
+        return
+    if os.path.isdir(ruta_archivo):
+        print("Has indicado una carpeta. Debes indicar un archivo de texto.")
+        return
+    try:
+        nuevo_texto = input("Escribe el texto que quieres añadir al final: ")
+        with open(ruta_archivo, mode="a", encoding="utf-8") as archivo_de_texto:
+            archivo_de_texto.write(nuevo_texto)
+        print("Texto añadido correctamente.")
+    except PermissionError:
+        print("No tienes permisos para escribir en este archivo.")
+    except FileNotFoundError:
+        print("El archivo no existe o la ruta no es válida.")
+    except OSError as error_del_sistema_operativo:
+        print(f"No se pudo escribir en el archivo: {error_del_sistema_operativo}")
 
+def eliminar_elemento():
+    #Elimina un archivo o una carpeta vacía indicada por el usuario.
+    nombre_elemento = input("Escribe el nombre del archivo o directorio a eliminar: ").strip()
+    if not nombre_elemento:
+        print("El nombre no puede estar vacío.")
+        return
+    ruta_elemento = os.path.join(os.getcwd(), nombre_elemento)
+    if not os.path.exists(ruta_elemento):
+        print("No existe un archivo o directorio con ese nombre.")
+        return
+    try:
+        if os.path.isdir(ruta_elemento):
+            # os.rmdir solo elimina directorios vacíos.
+            os.rmdir(ruta_elemento)
+            print("Carpeta eliminada correctamente (debe estar vacía).")
+        else:
+            os.remove(ruta_elemento)
+            print("Archivo eliminado correctamente.")
+    except PermissionError:
+        print("No tienes permisos para eliminar este elemento.")
+    except OSError as error_del_sistema_operativo:
+        # Por ejemplo, directorio no vacío u otros problemas del sistema.
+        print(f"No se pudo eliminar el elemento: {error_del_sistema_operativo}")
+
+
+def mostrar_informacion():
+    #Muestra el tamaño, la fecha de modificación y el tipo (archivo o carpeta).
+    nombre_elemento = input("Escribe el nombre del archivo o directorio: ").strip()
+    if not nombre_elemento:
+        print("El nombre no puede estar vacío.")
+        return
+
+    ruta_elemento = os.path.join(os.getcwd(), nombre_elemento)
+
+    if not os.path.exists(ruta_elemento):
+        print("No existe un archivo o directorio con ese nombre.")
+        return
+
+    try:
+        # Obtenemos el tamaño del archivo en bytes
+        tamanio_en_bytes = os.path.getsize(ruta_elemento)
+
+        # Obtenemos la última modificación
+        modificacion = os.path.getmtime(ruta_elemento)
+
+        # Convertimos modificacion a formato legible (año-mes-día hora:minutos:segundos)
+        fecha_modificacion = datetime.datetime.fromtimestamp(modificacion).strftime("%Y-%m-%d %H:%M:%S")
+
+        # También obtenemos la hora actual, usando datetime.datetime.now()
+        ahora = datetime.datetime.now()
+        hora_actual = ahora.strftime("%Y-%m-%d %H:%M:%S")
+
+        # Comprobamos si es archivo o carpeta
+        if os.path.isdir(ruta_elemento):
+            tipo_elemento = "CARPETA"
+        else:
+            tipo_elemento = "ARCHIVO"
+
+        # Mostramos toda la información
+        print("\n--- Información del elemento ---")
+        print(f"Nombre: {nombre_elemento}")
+        print(f"Ruta: {ruta_elemento}")
+        print(f"Tipo: {tipo_elemento}")
+        print(f"Tamaño (bytes): {tamanio_en_bytes}")
+        print(f"Fecha de última modificación: {fecha_modificacion}")
+        print(f"Hora actual del sistema: {hora_actual}")
+
+        #Si es un archivo, mostramos su contenido
+        if os.path.isfile(ruta_elemento):
+            print("\n--- Contenido del archivo ---")
+            try:
+                with open(ruta_elemento, "r", encoding="utf-8") as archivo:
+                    contenido = archivo.read()
+                    if contenido.strip() == "":
+                        print("(El archivo está vacío)")
+                    else:
+                        print(contenido)
+            except UnicodeDecodeError:
+                print("(El archivo no es de texto o tiene un formato que no se puede leer)")
+            except Exception as error:
+                print(f"(No se pudo leer el contenido del archivo: {error})")
+
+    except PermissionError:
+        print("No tienes permisos para leer la información de este elemento.")
+    except OSError as error_del_sistema_operativo:
+        print(f"No se pudo obtener la información: {error_del_sistema_operativo}")
 
 
 def main():
