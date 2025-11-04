@@ -16,9 +16,11 @@ def mostrar_menu():
     print("5) Eliminar un archivo o directorio")
     print("6) Mostrar información de un archivo o directorio")
     print("7) Ir al directorio padre")
-    print("8) Comentarios para Jordi")
-    print("9) Salir")
+    print("8) Renombrar un archivo o directorio")
+    print("9) Comentarios para Jordi")
+    print("10) Salir")
     print("================================================")
+
 
 def mostrar_ruta_actual():
     #Muestra la ruta del directorio actual para que el usuario se sitúe.
@@ -215,12 +217,53 @@ def ir_directorio_padre():
         os.chdir(ruta_padre)
         print(f"Te has movido al directorio: {ruta_padre}")
 
+def renombrar_elemento():
+    #Permite renombrar un archivo o una carpeta en el directorio actual.
+    nombre_actual = input("Escribe el nombre ACTUAL del archivo o directorio: ").strip()
+    if not nombre_actual:
+        print("El nombre actual no puede estar vacío.")
+        return
+
+    nuevo_nombre = input("Escribe el NUEVO nombre: ").strip()
+    if not nuevo_nombre:
+        print("El nuevo nombre no puede estar vacío.")
+        return
+
+    ruta_actual = os.path.join(os.getcwd(), nombre_actual)
+    ruta_nueva = os.path.join(os.getcwd(), nuevo_nombre)
+
+    # Validaciones
+    if not os.path.exists(ruta_actual):
+        print("No existe un archivo o directorio con ese nombre actual.")
+        return
+
+    if os.path.exists(ruta_nueva):
+        print("Ya existe un archivo o directorio con el nuevo nombre.")
+        return
+
+    if nombre_actual == nuevo_nombre:
+        print("El nombre actual y el nuevo nombre son iguales. No hay nada que cambiar.")
+        return
+
+    # Intento de renombrado
+    try:
+        os.rename(ruta_actual, ruta_nueva)
+        print(f"Se ha renombrado correctamente a: {nuevo_nombre}")
+    except PermissionError:
+        print("No tienes permisos para renombrar este elemento.")
+    except FileNotFoundError:
+        # Por si el origen desaparece entre la comprobación y el renombrado
+        print("El elemento a renombrar ya no existe.")
+    except OSError as error_del_sistema_operativo:
+        print(f"No se pudo renombrar: {error_del_sistema_operativo}")
+
+
 def main():
     #Bucle principal del programa. Muestra la ruta y el menú hasta que el usuario salga.
     while True:
         mostrar_ruta_actual()
         mostrar_menu()
-        opcion_elegida = input("Elige una opción (1 al 9): ").strip()
+        opcion_elegida = input("Elige una opción (1 al 10): ").strip()
         if opcion_elegida == "1":
             listar_contenido()
         elif opcion_elegida == "2":
@@ -236,11 +279,13 @@ def main():
         elif opcion_elegida == "7":
             ir_directorio_padre()
         elif opcion_elegida == "8":
-            notas_jordi()
+            renombrar_elemento()
         elif opcion_elegida == "9":
+            notas_jordi()
+        elif opcion_elegida == "10":
             print("Saliendo del programa. ¡Hasta pronto!")
             break
         else:
-            print("Opción no válida. Por favor, elige un número del 1 al 9.")
+            print("Opción no válida. Por favor, elige un número del 1 al 10.")
 
 main()
