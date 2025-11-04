@@ -108,7 +108,7 @@ def escribir_en_archivo():
     try:
         nuevo_texto = input("Escribe el texto que quieres añadir al final: ")
         with open(ruta_archivo, mode="a", encoding="utf-8") as archivo_de_texto:
-            archivo_de_texto.write(nuevo_texto)
+            archivo_de_texto.write("\n" + nuevo_texto)
         print("Texto añadido correctamente.")
     except PermissionError:
         print("No tienes permisos para escribir en este archivo.")
