@@ -17,8 +17,9 @@ def mostrar_menu():
     print("6) Mostrar información de un archivo o directorio")
     print("7) Ir al directorio padre")
     print("8) Renombrar un archivo o directorio")
-    print("9) Comentarios para Jordi")
-    print("10) Salir")
+    print("9) Mostrar el tamaño total de los archivos del directorio actual")
+    print("10) Comentarios para Jordi")
+    print("11) Salir")
     print("================================================")
 
 
@@ -257,6 +258,30 @@ def renombrar_elemento():
     except OSError as error_del_sistema_operativo:
         print(f"No se pudo renombrar: {error_del_sistema_operativo}")
 
+def mostrar_tamano_total():
+    # Obtener la ruta actual
+    ruta_actual = os.getcwd()
+
+    # Listar los elementos de la carpeta actual
+    elementos = os.listdir(ruta_actual)
+
+    # Variable para acumular el tamaño total
+    tamano_total = 0
+
+    # Recorrer todos los elementos
+    for nombre in elementos:
+        ruta_completa = os.path.join(ruta_actual, nombre)
+
+        # Solo contar los archivos (no carpetas)
+        if os.path.isfile(ruta_completa):
+            tamano_total += os.path.getsize(ruta_completa)
+
+    # Mostrar el resultado en diferentes unidades
+    print("\n--- TAMAÑO TOTAL DE LOS ARCHIVOS ---")
+    print(f"Total en bytes: {tamano_total}")
+    print(f"En kilobytes (KB): {tamano_total / 1024:.2f}")
+    print(f"En megabytes (MB): {tamano_total / (1024 * 1024):.2f}")
+
 def notas_jordi():
     while True:
         print("\n---APARTADOS EXTRAS: Comentarios y dificultades---")
@@ -264,34 +289,28 @@ def notas_jordi():
         print("2 - Directorio padre")
         print("3 - Uso de Colorama")
         print("4 - Renombrar elementos")
-        print("5 - Volver al Menu Principal")
+        print("5 - Mostar tamaño total de los archivos")
+        print("6 - Volver al Menu Principal")
 
         opcion = input("Selecciona una opción:")
 
         if opcion == "1":
             print("\nEscritura y Comprobación de Errores:\n")
-            print(
-                "Uno de los aspectos que más me ha costado ha sido la parte del manejo de errores con las excepciones PermissionError, FileNotFoundError y OSError.")
+            print("Uno de los aspectos que más me ha costado ha sido la parte del manejo de errores con las excepciones PermissionError, FileNotFoundError y OSError.")
             print("Entendía la teoría de para qué servía cada una, pero me resultó complicado aplicarlas correctamente en el código para que el programa no se cerrara al producirse un fallo. ")
             print("Además, al probar el proyecto en la consola, no siempre pude comprobar si realmente se generaban estos errores.")
-            print(
-                "Puesto que en mi entorno no se daban las situaciones necesarias (por ejemplo, intentar acceder a carpetas sin permisos o rutas inexistentes).")
-            print(
-                "Aun así, los añadí para asegurar que el programa sea más robusto y preparado ante posibles problemas reales.")
-            print(
-                "Usé las siguientes referencias para poder aplicarlo")
+            print("Puesto que en mi entorno no se daban las situaciones necesarias (por ejemplo, intentar acceder a carpetas sin permisos o rutas inexistentes).")
+            print("Aun así, los añadí para asegurar que el programa sea más robusto y preparado ante posibles problemas reales.")
+            print("Usé las siguientes referencias para poder aplicarlo")
             print("https://docs.python.org/3/library/exceptions.html")
             print("https://realpython.com/ref/builtin-exceptions/permissionerror/")
             print("https://labex.io/tutorials/python-how-to-handle-filenotfounderror-in-python-421944")
 
         elif opcion == "2":
             print("\nDirectorio padre:\n")
-            print(
-                "Otra parte en la que me ha surgido muchas dudas ha sido la de permitir volver al directorio padre.")
-            print(
-                "Al principio me costaba entender cómo funcionaba la relación entre las rutas en el sistema de archivos y qué significaba exactamente el “directorio padre”. ")
-            print(
-                "También tuve que aprender cómo usar correctamente las funciones os.getcwd() y os.path.dirname() para cambiar de carpeta sin provocar errores. ")
+            print("Otra parte en la que me ha surgido muchas dudas ha sido la de permitir volver al directorio padre.")
+            print("Al principio me costaba entender cómo funcionaba la relación entre las rutas en el sistema de archivos y qué significaba exactamente el “directorio padre”. ")
+            print("También tuve que aprender cómo usar correctamente las funciones os.getcwd() y os.path.dirname() para cambiar de carpeta sin provocar errores. ")
             print("Aunque finalmente conseguí que funcionara, fue un apartado que requirió varias pruebas y consultas para comprenderlo bien.")
             print("Usé la siguiente referencia para poder aplicarlo")
             print("https://docs.python.org/3/library/os.path.html")
@@ -299,26 +318,30 @@ def notas_jordi():
         elif opcion == "3":
             print("\nUso de Colorama:\n")
             print("Este apartado me ha resultado super facil de entender y aplicar.")
-            print(
-                "Me ha llecado tan solo unos pocos minutos escribir el código, ya que intarlar colorama desde consola a sido muy sencillo")
-            print(
-                "Las bibliografias que he utilizado han sido las siguietnes.")
+            print("Me ha llecado tan solo unos pocos minutos escribir el código, ya que intarlar colorama desde consola a sido muy sencillo")
+            print("Las bibliografias que he utilizado han sido las siguietnes.")
             print("https://thelinuxcode.com/colorama-python/")
             print("https://www.geeksforgeeks.org/python/introduction-to-python-colorama/ ")
 
 
         elif opcion == "4":
             print("\nRenombrar elementos\n")
-            print(
-                "En este apartado lo que más trabajo me ha costado ha sido hacer funcionar correctamente las validaciones para evitar errores.")
-            print(
-                "Al principio, el programa se detenía si el archivo no existía o si ya había otro con el mismo nombre, por lo que tuve que aprender a usar comprobaciones con os.path.exists() y manejar las excepciones adecuadas.")
+            print("En este apartado lo que más trabajo me ha costado ha sido hacer funcionar correctamente las validaciones para evitar errores.")
+            print("Al principio, el programa se detenía si el archivo no existía o si ya había otro con el mismo nombre, por lo que tuve que aprender a usar comprobaciones con os.path.exists() y manejar las excepciones adecuadas.")
             print("Para ello, usé las siguientes referencias y la IA para lograr escribir las validacioens correctamente y poder hacer funcinar el código. ")
             print("https://www.tutorialspoint.com/python/python_renaming_and_delete_files.htm")
             print("https://www.geeksforgeeks.org/python/python-os-rename-method/")
             print("https://docs.python.org/3/library/os.html")
 
         elif opcion == "5":
+            print("\nMostar tamaño total de los archivos\n")
+            print("Este apartado me ha resultado bastante sencillo de realizar, ya que la referencia “How to calculate a directory size using Python?” explica el proceso de forma muy clara y visual.")
+            print("Gracias a los ejemplos mostrados en esa guía, pude entender fácilmente cómo recorrer los archivos del directorio actual y sumar sus tamaños usando os.path.getsize()")
+            print("https://www.geeksforgeeks.org/python/how-to-get-size-of-folder-using-python/")
+            print("https://www.delftstack.com/api/python/python-os-path-getsize/")
+            print("https://www.tutorialspoint.com/How-to-calculate-a-directory-size-using-Python")
+
+        elif opcion == "6":
             break
         else:
             print("Opción no válida. Intenta de nuevo.")
@@ -328,7 +351,7 @@ def main():
     while True:
         mostrar_ruta_actual()
         mostrar_menu()
-        opcion_elegida = input("Elige una opción (1 al 10): ").strip()
+        opcion_elegida = input("Elige una opción (1 al 11): ").strip()
         if opcion_elegida == "1":
             listar_contenido()
         elif opcion_elegida == "2":
@@ -346,11 +369,13 @@ def main():
         elif opcion_elegida == "8":
             renombrar_elemento()
         elif opcion_elegida == "9":
-            notas_jordi()
+            mostrar_tamano_total()
         elif opcion_elegida == "10":
+            notas_jordi()
+        elif opcion_elegida == "11":
             print("Saliendo del programa. ¡Hasta pronto!")
             break
         else:
-            print("Opción no válida. Por favor, elige un número del 1 al 10.")
+            print("Opción no válida. Por favor, elige un número del 1 al 11.")
 
 main()
