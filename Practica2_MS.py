@@ -11,8 +11,9 @@ def mostrar_menu():
     print("4) Escribir texto en un archivo existente (añadir al final)")
     print("5) Eliminar un archivo o directorio")
     print("6) Mostrar información de un archivo o directorio")
-    print("7) Comentarios para Jordi")
-    print("8) Salir")
+    print("7) Ir al directorio padre")
+    print("8) Comentarios para Jordi")
+    print("9) Salir")
     print("================================================")
 
 def mostrar_ruta_actual():
@@ -197,13 +198,23 @@ def mostrar_informacion():
     except OSError as error_del_sistema_operativo:
         print(f"No se pudo obtener la información: {error_del_sistema_operativo}")
 
+def ir_directorio_padre():
+    #Permite moverse al directorio padre (uno hacia atrás).
+    ruta_actual = os.getcwd()
+    ruta_padre = os.path.dirname(ruta_actual)
+
+    if ruta_padre == ruta_actual:
+        print("Ya estás en el directorio raíz. No puedes subir más.")
+    else:
+        os.chdir(ruta_padre)
+        print(f"Te has movido al directorio: {ruta_padre}")
 
 def main():
     #Bucle principal del programa. Muestra la ruta y el menú hasta que el usuario salga.
     while True:
         mostrar_ruta_actual()
         mostrar_menu()
-        opcion_elegida = input("Elige una opción (1 al 8): ").strip()
+        opcion_elegida = input("Elige una opción (1 al 9): ").strip()
         if opcion_elegida == "1":
             listar_contenido()
         elif opcion_elegida == "2":
@@ -217,11 +228,13 @@ def main():
         elif opcion_elegida == "6":
             mostrar_informacion()
         elif opcion_elegida == "7":
-            notas_jordi()
+            ir_directorio_padre()
         elif opcion_elegida == "8":
+            notas_jordi()
+        elif opcion_elegida == "9":
             print("Saliendo del programa. ¡Hasta pronto!")
             break
         else:
-            print("Opción no válida. Por favor, elige un número del 1 al 8.")
+            print("Opción no válida. Por favor, elige un número del 1 al 9.")
 
 main()
