@@ -2,6 +2,10 @@
 import os
 import datetime
 
+from colorama import Fore, Style, init
+init(autoreset=True)
+#autoreset=True hace que los colores se restauren automáticamente después de cada línea.
+
 def mostrar_menu():
     #Muestra las opciones disponibles del programa.
     print("\n================ MENÚ PRINCIPAL ================")
@@ -34,9 +38,11 @@ def listar_contenido():
             ruta_elemento = os.path.join(os.getcwd(), nombre_elemento)
             if os.path.isdir(ruta_elemento):
                 tipo = "CARPETA"
+                color = Fore.BLUE + Style.BRIGHT
             else:
                 tipo = "ARCHIVO"
-            print(f"- {nombre_elemento}  ->  {tipo}")
+                color = Fore.MAGENTA
+            print(f"- {color}{nombre_elemento}{Style.RESET_ALL}  ->  {tipo}")
     except PermissionError:
         print("No tienes permisos para listar este directorio.")
     except FileNotFoundError:
