@@ -1,3 +1,4 @@
 Hola mundohola de nuevo 
 salto de linea
 comprobación de salto de linea correcto
+comprobacion de comandos

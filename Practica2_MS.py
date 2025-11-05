@@ -6,6 +6,9 @@ from colorama import Fore, Style, init
 init(autoreset=True)
 #autoreset=True hace que los colores se restauren automáticamente después de cada línea.
 
+HISTORIAL = []
+# Aquí se guardarán los comandos que el usuario use
+
 def mostrar_menu():
     #Muestra las opciones disponibles del programa.
     print("\n================ MENÚ PRINCIPAL ================")
@@ -18,8 +21,9 @@ def mostrar_menu():
     print("7) Ir al directorio padre")
     print("8) Renombrar un archivo o directorio")
     print("9) Mostrar el tamaño total de los archivos del directorio actual")
-    print("10) Comentarios para Jordi")
-    print("11) Salir")
+    print("10) Historial de comandos")
+    print("11) Comentarios para Jordi")
+    print("12) Salir")
     print("================================================")
 
 
@@ -35,6 +39,7 @@ def listar_contenido():
         elementos = os.listdir(os.getcwd())
         if not elementos:
             print("El directorio está vacío.")
+            HISTORIAL.append("Listar contenido (vacío)")
             return
         print("\nContenido del directorio actual:")
         for nombre_elemento in elementos:
@@ -46,6 +51,7 @@ def listar_contenido():
                 tipo = "ARCHIVO"
                 color = Fore.MAGENTA
             print(f"- {color}{nombre_elemento}{Style.RESET_ALL}  ->  {tipo}")
+        HISTORIAL.append("Listar contenido")
     except PermissionError:
         print("No tienes permisos para listar este directorio.")
     except FileNotFoundError:
@@ -66,6 +72,7 @@ def crear_directorio():
     try:
         os.mkdir(ruta_nueva)
         print(f"Directorio creado: {ruta_nueva}")
+        HISTORIAL.append(f"Crear directorio -> {nombre_directorio}")
     except PermissionError:
         print("No tienes permisos para crear el directorio en esta ubicación.")
     except FileNotFoundError:
@@ -88,6 +95,7 @@ def crear_archivo():
         with open(ruta_archivo, mode="w", encoding="utf-8") as archivo_de_texto:
             archivo_de_texto.write(contenido_inicial)
         print(f"Archivo creado: {ruta_archivo}")
+        HISTORIAL.append(f"Crear archivo -> {nombre_archivo}")
     except PermissionError:
         print("No tienes permisos para crear o escribir en este archivo.")
     except FileNotFoundError:
@@ -113,6 +121,7 @@ def escribir_en_archivo():
         with open(ruta_archivo, mode="a", encoding="utf-8") as archivo_de_texto:
             archivo_de_texto.write("\n" + nuevo_texto)
         print("Texto añadido correctamente.")
+        HISTORIAL.append(f"Escribir en archivo -> {nombre_archivo}")
     except PermissionError:
         print("No tienes permisos para escribir en este archivo.")
     except FileNotFoundError:
@@ -135,9 +144,11 @@ def eliminar_elemento():
             # os.rmdir solo elimina directorios vacíos.
             os.rmdir(ruta_elemento)
             print("Carpeta eliminada correctamente (debe estar vacía).")
+            HISTORIAL.append(f"Eliminar carpeta -> {nombre_elemento}")
         else:
             os.remove(ruta_elemento)
             print("Archivo eliminado correctamente.")
+            HISTORIAL.append(f"Eliminar archivo -> {nombre_elemento}")
     except PermissionError:
         print("No tienes permisos para eliminar este elemento.")
     except OSError as error_del_sistema_operativo:
@@ -187,6 +198,8 @@ def mostrar_informacion():
         print(f"Fecha de última modificación: {fecha_modificacion}")
         print(f"Hora actual del sistema: {hora_actual}")
 
+        HISTORIAL.append(f"Mostrar información -> {nombre_elemento}")
+
         #Si es un archivo, mostramos su contenido
         if os.path.isfile(ruta_elemento):
             print("\n--- Contenido del archivo ---")
@@ -217,6 +230,7 @@ def ir_directorio_padre():
     else:
         os.chdir(ruta_padre)
         print(f"Te has movido al directorio: {ruta_padre}")
+        HISTORIAL.append(f"Ir al directorio padre -> {ruta_padre}")
 
 def renombrar_elemento():
     #Permite renombrar un archivo o una carpeta en el directorio actual.
@@ -250,6 +264,7 @@ def renombrar_elemento():
     try:
         os.rename(ruta_actual, ruta_nueva)
         print(f"Se ha renombrado correctamente a: {nuevo_nombre}")
+        HISTORIAL.append(f"Renombrar -> {nombre_actual} -> {nuevo_nombre}")
     except PermissionError:
         print("No tienes permisos para renombrar este elemento.")
     except FileNotFoundError:
@@ -282,6 +297,15 @@ def mostrar_tamano_total():
     print(f"En kilobytes (KB): {tamano_total / 1024:.2f}")
     print(f"En megabytes (MB): {tamano_total / (1024 * 1024):.2f}")
 
+def mostrar_historial():
+    #Muestra todos los comandos que el usuario ha ejecutado en esta sesión.
+    if not HISTORIAL:
+        print("Aún no has ejecutado ningún comando.")
+    else:
+        print("\n--- HISTORIAL DE COMANDOS ---")
+        for numero, comando in enumerate(HISTORIAL, start=1):
+            print(f"{numero}. {comando}")
+
 def notas_jordi():
     while True:
         print("\n---APARTADOS EXTRAS: Comentarios y dificultades---")
@@ -290,7 +314,8 @@ def notas_jordi():
         print("3 - Uso de Colorama")
         print("4 - Renombrar elementos")
         print("5 - Mostar tamaño total de los archivos")
-        print("6 - Volver al Menu Principal")
+        print("6 - Historial de comandos")
+        print("7 - Volver al Menu Principal")
 
         opcion = input("Selecciona una opción:")
 
@@ -342,6 +367,15 @@ def notas_jordi():
             print("https://www.tutorialspoint.com/How-to-calculate-a-directory-size-using-Python")
 
         elif opcion == "6":
+            print("\nHistorial de comandos\n")
+            print("La implementación del historial de comandos ha sido relativamente sencilla.")
+            print("Sin embargo, la mayor dificultad ha estado en colocar correctamente las líneas que añadían los registros del historial dentro del código, especialmente para evitar que los return impidieran que se guardara el comando antes de que la función terminara")
+            print("Tuve que probar varias posiciones hasta conseguir que todos los comandos se registraran sin causar errores ni interferir con el funcionamiento del programa.")
+            print("Usando las siguientes referencias y la IA conseguí escribir el código en el sitio adecuado para que pudiese quedar todo registrado. ")
+            print("https://dnmtechs.com/viewing-command-history-in-interactive-python/")
+            print("https://cmd2.readthedocs.io/en/latest/features/history/")
+
+        elif opcion == "7":
             break
         else:
             print("Opción no válida. Intenta de nuevo.")
@@ -351,7 +385,7 @@ def main():
     while True:
         mostrar_ruta_actual()
         mostrar_menu()
-        opcion_elegida = input("Elige una opción (1 al 11): ").strip()
+        opcion_elegida = input("Elige una opción (1 al 12): ").strip()
         if opcion_elegida == "1":
             listar_contenido()
         elif opcion_elegida == "2":
@@ -371,11 +405,13 @@ def main():
         elif opcion_elegida == "9":
             mostrar_tamano_total()
         elif opcion_elegida == "10":
-            notas_jordi()
+            mostrar_historial()
         elif opcion_elegida == "11":
+            notas_jordi()
+        elif opcion_elegida == "12":
             print("Saliendo del programa. ¡Hasta pronto!")
             break
         else:
-            print("Opción no válida. Por favor, elige un número del 1 al 11.")
+            print("Opción no válida. Por favor, elige un número del 1 al 12.")
 
 main()
